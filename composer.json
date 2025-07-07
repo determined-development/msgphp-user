@@ -21,10 +21,10 @@
     },
     "require-dev": {
         "doctrine/orm": "^2.6",
-        "symfony/form": "^3.4.24 || ^4.3 || ^5.0 || ^6.0",
-        "symfony/messenger": "^4.3 || ^5.0 || ^6.0",
-        "symfony/security-core": "^3.4 || ^4.3 || ^5.0 || ^6.0",
-        "symfony/validator": "^3.4 || ^4.3 || ^5.0 || ^6.0"
+        "symfony/form": "^3.4.24 || ^4.3 || ^5.0 || ^6.0 || ^7.0",
+        "symfony/messenger": "^4.3 || ^5.0 || ^6.0 || ^7.0",
+        "symfony/security-core": "^3.4 || ^4.3 || ^5.0 || ^6.0 || ^7.0",
+        "symfony/validator": "^3.4 || ^4.3 || ^5.0 || ^6.0 || ^7.0"
     },
     "config": {
         "preferred-install": {
@@ -39,11 +39,13 @@
     },
     "autoload": {
         "psr-4": {
-            "MsgPhp\\User\\": ""
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+            "MsgPhp\\User\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MsgPhp\\Domain\\Tests\\": "tests"
+        }
     },
     "minimum-stability": "dev"
 }
