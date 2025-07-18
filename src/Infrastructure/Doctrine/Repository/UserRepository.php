@@ -6,6 +6,7 @@ namespace MsgPhp\User\Infrastructure\Doctrine\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use MsgPhp\Domain\DomainCollection;
+use MsgPhp\Domain\Factory\DomainObjectFactory;
 use MsgPhp\Domain\Infrastructure\Doctrine\DomainEntityRepositoryTrait;
 use MsgPhp\User\Repository\UsernameRepository;
 use MsgPhp\User\Repository\UserRepository as BaseUserRepository;
@@ -24,6 +25,8 @@ final class UserRepository implements BaseUserRepository
     /** @use DomainEntityRepositoryTrait<T> */
     use DomainEntityRepositoryTrait;
 
+    /** @var class-string<UserId> */
+    private $idClass;
     /** @var null|string */
     private $usernameField;
     /** @var null|UsernameRepository<Username<T>> */
@@ -32,10 +35,11 @@ final class UserRepository implements BaseUserRepository
     /**
      * @param class-string<T> $class
      */
-    public function __construct(string $class, EntityManagerInterface $em, ?string $usernameField = null, ?UsernameRepository $usernameRepository = null)
+    public function __construct(string $class, EntityManagerInterface $em, DomainObjectFactory $domainObjectFactory, ?string $usernameField = null, ?UsernameRepository $usernameRepository = null)
     {
         $this->class = $class;
         $this->em = $em;
+        $this->idClass = $domainObjectFactory->getClass(UserId::class);
         $this->usernameField = $usernameField;
         $this->usernameRepository = $usernameRepository;
     }
@@ -45,9 +49,9 @@ final class UserRepository implements BaseUserRepository
         return $this->doFindAll($offset, $limit);
     }
 
-    public function find(UserId $id): User
+    public function find(UserId|string|int $id): User
     {
-        return $this->doFind($id);
+        return $this->doFind($this->toUserId($id));
     }
 
     public function findByUsername(string $username): User
@@ -63,9 +67,9 @@ final class UserRepository implements BaseUserRepository
         return $this->doFindByFields([$this->usernameField => $username]);
     }
 
-    public function exists(UserId $id): bool
+    public function exists(UserId|string|int $id): bool
     {
-        return $this->doExists($id);
+        return $this->doExists($this->toUserId($id));
     }
 
     public function usernameExists(string $username): bool
@@ -89,5 +93,10 @@ final class UserRepository implements BaseUserRepository
     public function delete(User $user): void
     {
         $this->doDelete($user);
+    }
+
+    private function toUserId($id): UserId
+    {
+        return $this->idClass::fromValue((string) $id);
     }
 }

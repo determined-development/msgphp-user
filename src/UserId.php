@@ -11,4 +11,5 @@ use MsgPhp\Domain\DomainId;
  */
 interface UserId extends DomainId
 {
+    public static function fromValue($value): DomainId;
 }

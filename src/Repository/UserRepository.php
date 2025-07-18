@@ -23,14 +23,14 @@ interface UserRepository
     /**
      * @return T
      */
-    public function find(UserId $id): User;
+    public function find(UserId|string|int $id): User;
 
     /**
      * @return T
      */
     public function findByUsername(string $username): User;
 
-    public function exists(UserId $id): bool;
+    public function exists(UserId|string|int $id): bool;
 
     public function usernameExists(string $username): bool;
 

@@ -17,7 +17,8 @@
         }
     ],
     "require": {
-        "msgphp/domain": "^0.16"
+        "php": "^8.0",
+        "msgphp/domain": "^0.17"
     },
     "require-dev": {
         "doctrine/orm": "^2.6",
@@ -47,5 +48,11 @@
             "MsgPhp\\User\\Tests\\": "tests"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/determined-development/msgphp-domain"
+        }
+    ]
 }

@@ -7,7 +7,7 @@ namespace MsgPhp\User\Infrastructure\Console\Definition;
 use MsgPhp\Domain\Factory\DomainObjectFactory;
 use MsgPhp\Domain\Infrastructure\Console\Definition\DomainDefinition;
 use MsgPhp\User\Credential\UsernameCredential;
-use MsgPhp\User\Infrastructure\Doctrine\Repository\UserRepository;
+use MsgPhp\User\Repository\UserRepository;
 use MsgPhp\User\User;
 use MsgPhp\User\UserId;
 use Symfony\Component\Console\Input\InputArgument;
