@@ -9,7 +9,7 @@ use MsgPhp\User\Repository\UserRepository;
 use MsgPhp\User\Role\RoleProvider;
 use MsgPhp\User\User;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -37,7 +37,7 @@ final class UserIdentityProvider implements UserProviderInterface
         try {
             $user = $this->repository->findByUsername($username);
         } catch (EntityNotFound $e) {
-            throw new UsernameNotFoundException($e->getMessage());
+            throw new UserNotFoundException($e->getMessage());
         }
 
         return $this->fromUser($user, $username);
@@ -46,19 +46,19 @@ final class UserIdentityProvider implements UserProviderInterface
     /**
      * @return UserIdentity
      */
-    public function refreshUser(UserInterface $identity): UserInterface
+    public function refreshUser(UserInterface $user): UserInterface
     {
-        if (!$identity instanceof UserIdentity) {
-            throw new UnsupportedUserException('Unsupported user "'.\get_class($identity).'".');
+        if (!$user instanceof UserIdentity) {
+            throw new UnsupportedUserException('Unsupported user "'.\get_class($user).'".');
         }
 
         try {
-            $user = $this->repository->find($identity->getUserId());
+            $entity = $this->repository->find($user->getUserId());
         } catch (EntityNotFound $e) {
-            throw new UsernameNotFoundException($e->getMessage());
+            throw new UserNotFoundException($e->getMessage());
         }
 
-        return $this->fromUser($user, $identity->getOriginUsername());
+        return $this->fromUser($entity, $user->getOriginUsername());
     }
 
     /**
@@ -72,5 +72,16 @@ final class UserIdentityProvider implements UserProviderInterface
     public function fromUser(User $user, ?string $originUsername = null): UserIdentity
     {
         return new UserIdentity($user, $originUsername, $this->roleProvider ? $this->roleProvider->getRoles($user) : []);
+    }
+
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        try {
+            $user = $this->repository->find($identifier);
+        } catch (EntityNotFound $e) {
+            throw new UserNotFoundException($e->getMessage());
+        }
+
+        return $this->fromUser($user);
     }
 }

@@ -7,14 +7,14 @@ namespace MsgPhp\User\Infrastructure\Security;
 use MsgPhp\User\Credential\PasswordProtectedCredential;
 use MsgPhp\User\User;
 use MsgPhp\User\UserId;
-use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @author Roland Franssen <franssen.roland@gmail.com>
  */
-final class UserIdentity implements UserInterface, EquatableInterface, EncoderAwareInterface
+final class UserIdentity implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface
 {
     /** @var UserId */
     private $id;
@@ -95,5 +95,10 @@ final class UserIdentity implements UserInterface, EquatableInterface, EncoderAw
     public function getEncoderName(): string
     {
         return $this->hashing;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->id;
     }
 }
